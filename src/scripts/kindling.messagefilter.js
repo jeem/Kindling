@@ -15,6 +15,15 @@ kindling.module(function () {
     return $message.hasClass('timestamp_message');
   }
 
+  function isNoise($message) {
+    var noisy = ["New Relic alert", "Supplier M"];
+    for (var n = 0; n < noisy.length; n++ ) {
+      if ($message.text().indexOf(noisy[n]) != -1)
+        return true;
+    }
+    return false;
+  }
+
   function showMessage($message) {
     if ($message) {
       $message.removeClass('hidden_message');
@@ -28,7 +37,8 @@ kindling.module(function () {
   }
 
   function shouldHideThisMessage($message, options) {
-    return (options.leaveRoom === 'false' && isLeaveMessage($message)) ||
+    return (isNoise($message)) ||
+           (options.leaveRoom === 'false' && isLeaveMessage($message)) ||
            (options.enterRoom === 'false' && isEnterMessage($message)) ||
            (options.timeStamps === 'false' && isTimestampMessage($message));
   }
